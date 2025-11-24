@@ -28,9 +28,9 @@ model session {
 model Folder {
   id Int @id @default(autoincrement())
   name String
-  owner User @relation(fields: [ownerId], references: [id])
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId Int
-  parentDirectory Folder? @relation("FolderToFolder", fields: [parentDirectoryId], references: [id])
+  parentDirectory Folder? @relation("FolderToFolder", fields: [parentDirectoryId], references: [id], onDelete: Cascade)
   parentDirectoryId Int? @unique @map("parent_directory_id")
   childrenDirectory Folder? @relation("FolderToFolder")
   childrenFiles File[]
@@ -42,9 +42,9 @@ model File {
   name String
   fileURL String @map("file_url")
   ownerId Int @map("owner_id")
-  owner User @relation(fields: [ownerId], references: [id])
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   directoryId Int? @map("directory_id")
-  directory Folder? @relation(fields: [directoryId], references: [id])
+  directory Folder? @relation(fields: [directoryId], references: [id], onDelete: Cascade)
   @@map("files")
 }
 
