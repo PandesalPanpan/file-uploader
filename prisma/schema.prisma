@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -14,8 +8,43 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
+  id       Int    @id @default(autoincrement())
   username String @unique
   password String
+  folders Folder[]
+  files File[]
+
   @@map("users")
 }
+
+model session {
+  sid    String   @id @db.VarChar
+  sess   Json     @db.Json
+  expire DateTime @db.Timestamp(6)
+
+  @@index([expire], map: "IDX_session_expire")
+}
+
+model Folder {
+  id Int @id @default(autoincrement())
+  name String
+  owner User @relation(fields: [ownerId], references: [id])
+  ownerId Int
+  parentDirectory Folder? @relation("FolderToFolder", fields: [parentDirectoryId], references: [id])
+  parentDirectoryId Int? @unique @map("parent_directory_id")
+  childrenDirectory Folder? @relation("FolderToFolder")
+  childrenFiles File[]
+  @@map("folders")
+}
+
+model File {
+  id Int @id @default(autoincrement())
+  name String
+  fileURL String @map("file_url")
+  ownerId Int @map("owner_id")
+  owner User @relation(fields: [ownerId], references: [id])
+  directoryId Int? @map("directory_id")
+  directory Folder? @relation(fields: [directoryId], references: [id])
+  @@map("files")
+}
+
