@@ -5,11 +5,25 @@ import dotenv from 'dotenv';
 import session from 'express-session';
 import pool from './db/pool.js';
 import connectPgSimple from 'connect-pg-simple';
+import indexRouter from './routes/indexRouter.js'
+import './config/passport.js'
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 const PGStore = connectPgSimple(session);
 dotenv.config();
 
 const PORT = 3000;
 const app = express();
+
+// View and Asset Setup
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const assetsPath = path.join(__dirname, "public");
+
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
+app.use(express.static(assetsPath))
+app.use(express.urlencoded({ extended: true }))
 
 // Session Setup
 app.use(session({
@@ -27,13 +41,13 @@ app.use(session({
 
 
 // Passport Setup
-import './config/passport.js'
+
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get('/', (req, res) => {
-    res.send("Check your cookies");
-})
+
+// Router
+app.use(indexRouter)
 
 
 app.listen(PORT, (error) => {
