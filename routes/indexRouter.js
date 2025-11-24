@@ -1,14 +1,11 @@
 import { Router } from "express";
 import * as AuthController from '../controllers/AuthController.js'
-const indexRouter = Router();
+const authRouter = Router();
 
-indexRouter.get("/sign-up", AuthController.signUpGet);
-indexRouter.post("/sign-up", AuthController.signUpPost);
-indexRouter.get("/login", AuthController.loginGet);
-indexRouter.post("/login", AuthController.loginPost);
-indexRouter.get("/logout", AuthController.logout);
-indexRouter.get('/', (req, res) => {
-    res.render("index");
-})
+authRouter.get("/sign-up", AuthController.signUpGet);
+authRouter.post("/sign-up", AuthController.signUpPost);
+authRouter.get("/login", AuthController.loginGet);
+authRouter.post("/login", AuthController.loginPost);
+authRouter.get("/logout", AuthController.logout);
 
-export default indexRouter;
+export default authRouter;

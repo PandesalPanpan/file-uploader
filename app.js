@@ -5,10 +5,11 @@ import dotenv from 'dotenv';
 import session from 'express-session';
 import pool from './db/pool.js';
 import connectPgSimple from 'connect-pg-simple';
-import indexRouter from './routes/indexRouter.js'
+import authRouter from './routes/indexRouter.js'
 import './config/passport.js'
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import fileRouter from './routes/fileRouter.js'
 const PGStore = connectPgSimple(session);
 dotenv.config();
 
@@ -47,8 +48,8 @@ app.use(passport.session());
 
 
 // Router
-app.use(indexRouter)
-
+app.use(authRouter)
+app.use(fileRouter);
 
 app.listen(PORT, (error) => {
     if (error) {
