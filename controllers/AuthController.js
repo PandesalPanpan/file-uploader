@@ -1,6 +1,7 @@
 import passport from "passport";
 import prisma from "../db/prisma.js";
 import { hashPassword } from "../lib/passwordUtils.js";
+import { isAuth } from "../middlewares/auth.js";
 
 export const signUpGet = (req, res) => {
     res.render("sign-up");
@@ -37,3 +38,13 @@ export const loginPost = passport.authenticate(
         successRedirect: "/"
     }
 )
+
+export const logout = [
+    isAuth,
+    (req, res, next) => {
+        req.logout((err) => {
+            if (err) return next(err);
+            res.redirect('/');
+        });
+    }
+]
