@@ -1,3 +1,4 @@
+import passport from "passport";
 import prisma from "../db/prisma.js";
 import { hashPassword } from "../lib/passwordUtils.js";
 
@@ -24,3 +25,15 @@ export const signUpPost = async (req, res) => {
     res.render("index");
 
 }
+
+export const loginGet = (req, res) => {
+    res.render("login");
+}
+
+export const loginPost = passport.authenticate(
+    "local",
+    {
+        failureRedirect: "/login",
+        successRedirect: "/"
+    }
+)
