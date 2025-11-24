@@ -1,6 +1,21 @@
+import prisma from "../db/prisma.js"
 
-// Everything here is to use the auth middleware
+export const createFolderGet = (req, res) => {
+    res.render("create-folder");
+}
 
-export const testControl = (req, res) => {
-    res.render('/');
+export const createFolderPost = async (req, res) => {
+    // Check if there's a parent directory
+    const ownerId = req.user.id;
+    const { name, parent_directory_id } = req.body;
+
+    await prisma.folder.create({
+        data: {
+            ownerId: ownerId,
+            name: name,
+            parentDirectoryId: parent_directory_id ?? null
+        }
+    });
+
+    res.redirect('/');
 }
