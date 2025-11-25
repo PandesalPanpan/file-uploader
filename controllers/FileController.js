@@ -52,7 +52,7 @@ export const createFolderPost = async (req, res) => {
     const ownerId = req.user.id;
     const { name, parent_directory_id } = req.body;
 
-    await prisma.folder.create({
+    const folder = await prisma.folder.create({
         data: {
             ownerId: ownerId,
             name: name,
@@ -60,7 +60,9 @@ export const createFolderPost = async (req, res) => {
         }
     });
 
-    // TODO: Redirect inside the created directory if there is one
+    if (folder) {
+        return res.redirect(`/folder/${folder.id}`);
+    }
 
     res.redirect('/');
 }
