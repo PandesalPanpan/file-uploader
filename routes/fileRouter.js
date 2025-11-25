@@ -7,9 +7,8 @@ const fileRouter = Router()
 // Everything here should require isAuth
 fileRouter.use(isAuth);
 
-fileRouter.get("/", (req, res) => {
-    res.render("index");
-})
+fileRouter.get("/", fileController.getRootContents);
+fileRouter.get("/folder/:directoryId", fileController.getDirectoryContents);
 
 fileRouter.get("/create-folder", fileController.createFolderGet); 
 fileRouter.post("/create-folder", fileController.createFolderPost);

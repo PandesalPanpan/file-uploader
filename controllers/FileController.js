@@ -1,6 +1,42 @@
 import upload from "../config/upload.js";
 import prisma from "../db/prisma.js"
 
+export const getRootContents = async (req, res) => {
+    const [folders, files] = await prisma.$transaction([
+        prisma.folder.findMany({
+            where: { parentDirectoryId: null, ownerId: req.user.id }
+        }),
+        prisma.file.findMany({
+            where: { directoryId: null, ownerId: req.user.id }
+        })
+    ])
+
+
+    res.render("index", { files, folders })
+}
+
+export const getDirectoryContents = async (req, res) => {
+    const ownerId = req.user.id;
+    const { directoryId } = req.params;
+
+    const dirId = isNaN(directoryId) ? null : Number(directoryId);
+    if (directoryId != null && Number.isNaN(dirId)) {
+        return res.status(400).send('Invalid directory id');
+    }
+
+    const [folders, files] = await prisma.$transaction([
+        prisma.folder.findMany({
+            where: { parentDirectoryId: dirId, ownerId: ownerId }
+        }),
+        prisma.file.findMany({
+            where: { directoryId: dirId, ownerId: ownerId }
+        })
+    ]);
+
+
+    res.render("index", { folders, files });
+}
+
 export const createFolderGet = (req, res) => {
     res.render("create-folder");
 }
@@ -35,7 +71,7 @@ export const uploadFilePost = [
                 fileURL: file.path,
                 ownerId: req.user.id
             }
-        })    
+        })
 
         // TODO: Make this render the same page but with a message success
         res.redirect("/");

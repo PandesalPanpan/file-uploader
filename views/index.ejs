@@ -7,6 +7,25 @@
 </head>
 <body>
     <%- include("partials/navigation.ejs") %>
-    Hello World
+    Folders: 
+    <% if (locals.folders) { %>
+        <ul>
+        <% folders.map((folder) => { %>
+            <li>
+                <a href="folder/<%=folder.id%>"><%= folder.name %></a>
+                <span><a href="#">Edit</a>
+                <a href="#">Delete</a></span>
+            </li>    
+        <% }) %>
+        </ul>
+    <% } %>
+    Files:
+    <% if (locals.files) { %>
+        <ul>
+        <% files.map((file) => { %>
+            <li><%= file.name %></li>    
+        <% }) %>
+        </ul>
+    <% } %>
 </body>
 </html>
