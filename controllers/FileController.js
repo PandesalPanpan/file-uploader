@@ -34,11 +34,17 @@ export const getDirectoryContents = async (req, res) => {
     ]);
 
 
-    res.render("index", { folders, files });
+    res.render("index", { directoryId, folders, files });
 }
 
-export const createFolderGet = (req, res) => {
+export const createRootFolderGet = (req, res) => {
     res.render("create-folder");
+}
+
+export const createFolderInDirectoryGet = (req, res) => {
+    const { directoryId } = req.params;
+
+    res.render("create-folder", { directoryId: directoryId })
 }
 
 export const createFolderPost = async (req, res) => {
@@ -50,9 +56,11 @@ export const createFolderPost = async (req, res) => {
         data: {
             ownerId: ownerId,
             name: name,
-            parentDirectoryId: parent_directory_id ?? null
+            parentDirectoryId: Number(parent_directory_id) ?? null
         }
     });
+
+    // TODO: Redirect inside the created directory if there is one
 
     res.redirect('/');
 }

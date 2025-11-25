@@ -8,6 +8,7 @@
 <body>
     <%- include("partials/navigation.ejs") %>
     <form action="/create-folder" method="POST">
+        <input type="hidden" name="parent_directory_id" id="parent_directory_id" value="<%=locals.directoryId ?? null%>">
         <label for="name">Folder Name:
             <input type="text" name="name">
         </label>
