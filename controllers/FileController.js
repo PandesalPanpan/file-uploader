@@ -1,3 +1,4 @@
+import upload from "../config/upload.js";
 import prisma from "../db/prisma.js"
 
 export const createFolderGet = (req, res) => {
@@ -19,3 +20,24 @@ export const createFolderPost = async (req, res) => {
 
     res.redirect('/');
 }
+
+export const uploadFileGet = (req, res) => {
+    res.render("upload-form");
+}
+
+export const uploadFilePost = [
+    upload.single("file_upload"),
+    async (req, res) => {
+        const file = req.file;
+        await prisma.file.create({
+            data: {
+                name: file.originalname,
+                fileURL: file.path,
+                ownerId: req.user.id
+            }
+        })    
+
+        // TODO: Make this render the same page but with a message success
+        res.redirect("/");
+    }
+]

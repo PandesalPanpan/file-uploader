@@ -13,6 +13,7 @@ fileRouter.get("/", (req, res) => {
 
 fileRouter.get("/create-folder", fileController.createFolderGet); 
 fileRouter.post("/create-folder", fileController.createFolderPost);
-
+fileRouter.get("/upload-files", fileController.uploadFileGet);
+fileRouter.post("/upload-files", fileController.uploadFilePost);
 
 export default fileRouter;

@@ -1,0 +1,7 @@
+<%- include("partials/navigation.ejs") %>
+<form action="/upload-files" method="post" enctype="multipart/form-data">
+  <label for="file_upload">
+    <input type="file" name="file_upload"/>
+  </label>
+  <button type="submit">Upload</button>
+</form>

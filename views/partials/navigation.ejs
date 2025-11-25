@@ -1,6 +1,11 @@
 <nav>
+    <% if (locals.user) { %>
+        <%= user %>
+    <% } %>
     <a href="/">Home</a>
     <a href="/sign-up">Register</a>
     <a href="/login">Login</a>
     <a href="/logout">Logout</a>
+    <a href="/create-folder">Create Folder</a>
+    <a href="/upload-files">Upload Files</a>
 </nav>
