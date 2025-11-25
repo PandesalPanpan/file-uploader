@@ -12,7 +12,7 @@
         <ul>
         <% folders.map((folder) => { %>
             <li>
-                <a href="folder/<%=folder.id%>"><%= folder.name %></a>
+                <a href="<%= locals.directoryId ? '/folder/' + folder.id : 'folder/' + folder.id %>"><%= folder.name %></a>
                 <span><a href="#">Edit</a>
                 <a href="#">Delete</a></span>
             </li>    
