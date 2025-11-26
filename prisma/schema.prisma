@@ -40,6 +40,8 @@ model Folder {
 model File {
   id Int @id @default(autoincrement())
   name String
+  size String
+  uploadedAt DateTime @map("uploaded_at") @default(now())
   fileURL String @map("file_url")
   ownerId Int @map("owner_id")
   owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
