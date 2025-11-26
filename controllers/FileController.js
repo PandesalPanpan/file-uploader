@@ -73,7 +73,8 @@ export const editFolderGet = async (req, res) => {
 
     const folder = await prisma.folder.findFirst({
         where: {
-            id: Number(folderId)
+            id: Number(folderId),
+            ownerId: req.user.id
         }
     })
 
@@ -85,7 +86,8 @@ export const editFolderPost = async (req, res) => {
 
     const folder = await prisma.folder.update({
         where: {
-            id: Number(folder_id)
+            id: Number(folder_id),
+            ownerId: req.user.id
         },
         data: {
             name: name
@@ -100,7 +102,7 @@ export const deleteFolder = async (req, res) => {
 
     const [found] = await prisma.$transaction([
         prisma.folder.findUnique({
-            where: { id: Number(folderId) },
+            where: { id: Number(folderId), ownerId: req.user.id },
             select: { parentDirectoryId: true }
         }),
         prisma.folder.delete({
@@ -155,7 +157,7 @@ export const fileGet = async (req, res) => {
     const { fileId } = req.params;
 
     const file = await prisma.file.findUnique({
-        where: { id: Number(fileId) }
+        where: { id: Number(fileId), ownerId: req.user.id }
     });
 
     res.render("file-details", { file });
@@ -171,7 +173,9 @@ export const fileDownload = async (req, res) => {
 export const deleteFile = async (req, res) => {
     const { fileId } = req.params;
 
-    const file = await prisma.file.findUnique({ where: { id: Number(fileId) } })
+    const file = await prisma.file.findUnique(
+        { where: { id: Number(fileId), ownerId: req.user.id } }
+    )
 
     const deleted = await supabaseDelete(file.fileURL);
 
