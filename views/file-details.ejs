@@ -1,0 +1,7 @@
+<%- include("partials/navigation.ejs") %>
+<ul>
+    <li><%= file.name %></li>
+    <li><%= file.size %></li>
+    <li><%= file.uploadedAt %> </li>
+    <a href="/file/<%=file.id%>/download">Download</a>
+</ul>

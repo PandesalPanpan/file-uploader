@@ -147,3 +147,21 @@ export const uploadFilePost = [
         res.redirect("/");
     }
 ]
+
+export const fileGet = async (req, res) => {
+    const { fileId } = req.params;
+
+    const file = await prisma.file.findUnique({
+        where: { id: Number(fileId) }
+    });
+
+    res.render("file-details", { file });
+}
+
+export const fileDownload = async (req, res) => {
+    const { fileId } = req.params;
+
+    const file = await prisma.file.findUnique({ where: { id: Number(fileId) }})
+
+    res.download(file.fileURL, file.name);
+}

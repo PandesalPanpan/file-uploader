@@ -22,4 +22,7 @@ fileRouter.get("/upload-files", fileController.uploadFileGet);
 fileRouter.post("/upload-files", fileController.uploadFilePost);
 fileRouter.get("/upload-files/:folderId", fileController.uploadFileInDirectoryGet);
 
+fileRouter.get("/file/:fileId", fileController.fileGet);
+fileRouter.get("/file/:fileId/download", fileController.fileDownload);
+
 export default fileRouter;
