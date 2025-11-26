@@ -2,6 +2,7 @@ import { body, validationResult } from "express-validator";
 import { supabaseDelete, supabaseUpload } from "../config/supabase.js";
 import upload, { MAX_FILE_SIZE } from "../config/upload.js";
 import prisma from "../db/prisma.js"
+import { getCurrentPathCTE } from "../db/queries.js";
 
 const validateFolder = [
     body("name").trim()
@@ -18,8 +19,9 @@ export const getRootContents = async (req, res) => {
         })
     ])
 
+    const currentPath = []
 
-    res.render("index", { files, folders })
+    res.render("index", { files, folders, currentPath })
 }
 
 export const getDirectoryContents = async (req, res) => {
@@ -40,8 +42,9 @@ export const getDirectoryContents = async (req, res) => {
         })
     ]);
 
+    const currentPath = await getCurrentPathCTE(dirId, ownerId)
 
-    res.render("index", { directoryId, folders, files });
+    res.render("index", { directoryId, folders, currentPath, files });
 }
 
 export const createRootFolderGet = (req, res) => {
