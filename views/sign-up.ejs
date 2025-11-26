@@ -1,29 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
-    <link rel="stylesheet" href="/style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sign Up</title>
+  <link rel="stylesheet" href="/style.css" />
 </head>
-
 <body>
-    <%- include("partials/navigation.ejs") %>
+  <div class="container">
+    <header class="header">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>File Uploader</div>
+      </div>
 
-        <form action="/sign-up" method="POST">
-            <label for="username">Username:
-                <input name="username" type="text">
-            </label>
-            <label for="password">Password:
-                <input name="password" type="password">
-            </label>
-            <label for="confirm_password">Confirm Password:
-                <input name="confirm_password" type="password">
-            </label>
-            <button type="submit">Create Account</button>
-        </form>
+      <nav class="nav" role="navigation" aria-label="Main">
+        <%- include("partials/navigation.ejs") %>
+      </nav>
+    </header>
+
+    <main>
+      <section class="form" style="margin-top:1rem; max-width:480px;">
+        <h2>Create account</h2>
         <%- include("partials/errors.ejs") %>
-</body>
 
+        <form action="/sign-up" method="post" novalidate>
+          <label for="username">Username</label>
+          <input id="username" name="username" type="text" required>
+
+          <label for="password" style="margin-top:0.5rem;">Password</label>
+          <input id="password" name="password" type="password" required>
+          
+          <label for="confirm_password" style="margin-top:0.5rem;">Confirm Password</label>
+          <input id="confirm_password" name="confirm_password" type="password" required>
+
+          <div style="margin-top:0.75rem;">
+            <button class="btn btn-primary" type="submit">Sign up</button>
+            <a class="btn btn-ghost" href="/login">Login</a>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+</body>
 </html>

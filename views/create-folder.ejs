@@ -1,20 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Folder</title>
-    <link rel="stylesheet" href="/style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Create Folder</title>
+  <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
-    <%- include("partials/navigation.ejs") %>
-    <form action="/create-folder" method="POST">
-        <input type="hidden" name="parent_directory_id" id="parent_directory_id" value="<%=locals.directoryId ?? ''%>">
-        <label for="name">Folder Name:
-            <input type="text" name="name">
-        </label>
-        <button type="submit">Create Folder</button>
-    </form>
-    <%- include("partials/errors.ejs") %>
+  <div class="container">
+    <header class="header">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>File Uploader</div>
+      </div>
+
+      <nav class="nav" role="navigation" aria-label="Main">
+        <%- include("partials/navigation.ejs") %>
+      </nav>
+    </header>
+
+    <main>
+      <section class="breadcrumbs" aria-label="You are here">
+        <% if (locals.currentPath && locals.currentPath.length) { %>
+          <% locals.currentPath.forEach((p, i) => { %>
+            <a href="/folder/<%= p.id %>"><%= p.name %></a>
+            <% if (i < locals.currentPath.length - 1) { %>
+              <span aria-hidden="true">/</span>
+            <% } %>
+          <% }) %>
+        <% } else { %>
+          <span class="text-muted">Home</span>
+        <% } %>
+      </section>
+
+      <section style="margin-top:1rem; max-width:680px;">
+        <h2>Create Folder</h2>
+
+        <div class="form" role="form" aria-labelledby="create-folder-heading">
+          <form action="/create-folder" method="POST" novalidate>
+            <input type="hidden" name="parent_directory_id" id="parent_directory_id" value="<%= locals.directoryId ?? '' %>">
+
+            <label for="name">Folder name
+              <input id="name" name="name" type="text" placeholder="e.g. Projects" required>
+            </label>
+
+            <div style="display:flex; gap:0.5rem; margin-top:0.75rem;">
+              <button type="submit" class="btn btn-primary">Create Folder</button>
+
+              <% if (locals.directoryId) { %>
+                <a class="btn btn-ghost" href="/folder/<%= locals.directoryId %>">Cancel</a>
+              <% } else { %>
+                <a class="btn btn-ghost" href="/">Cancel</a>
+              <% } %>
+            </div>
+          </form>
+        </div>
+
+        <%- include("partials/errors.ejs") %>
+      </section>
+    </main>
+  </div>
 </body>
 </html>
