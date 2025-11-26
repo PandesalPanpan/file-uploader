@@ -24,5 +24,6 @@ fileRouter.get("/upload-files/:folderId", fileController.uploadFileInDirectoryGe
 
 fileRouter.get("/file/:fileId", fileController.fileGet);
 fileRouter.get("/file/:fileId/download", fileController.fileDownload);
+fileRouter.get("/file/:fileId/delete", fileController.deleteFile);
 
 export default fileRouter;

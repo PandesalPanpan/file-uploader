@@ -1,4 +1,4 @@
-import { uploadFile } from "../config/supabase.js";
+import { supabaseDelete, supabaseUpload } from "../config/supabase.js";
 import upload from "../config/upload.js";
 import prisma from "../db/prisma.js"
 
@@ -130,7 +130,7 @@ export const uploadFilePost = [
     upload.single("file_upload"),
     async (req, res) => {
         const file = req.file;
-        const supabaseFile = await uploadFile(file, req.user.id);
+        const supabaseFile = await supabaseUpload(file, req.user.id);
 
         await prisma.file.create({
             data: {
@@ -166,4 +166,20 @@ export const fileDownload = async (req, res) => {
 
     const file = await prisma.file.findUnique({ where: { id: Number(fileId) } })
     res.redirect(`${process.env.SUPABASE_URL}/storage/v1/object/public/${process.env.SUPABASE_BUCKET}/${file.fileURL}`);
+}
+
+export const deleteFile = async (req, res) => {
+    const { fileId } = req.params;
+
+    const file = await prisma.file.findUnique({ where: { id: Number(fileId) } })
+
+    const deleted = await supabaseDelete(file.fileURL);
+
+    if (deleted) {
+        await prisma.file.delete({
+            where: { id: file.id }
+        })
+    }
+
+    res.redirect(!!file.directoryId ? `/folder/${file.directoryId}` : '/');
 }

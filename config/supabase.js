@@ -8,7 +8,7 @@ const supabaseBucket = process.env.SUPABASE_BUCKET;
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-export async function uploadFile(file, userId) {
+export async function supabaseUpload(file, userId) {
     if (!file) throw new Error('No file provided');
     const filename = `${Date.now()}-${file.originalname}`;
     const objectPath = `${userId}/${filename}`;
@@ -26,3 +26,18 @@ export async function uploadFile(file, userId) {
     return data;
 }
 
+export async function supabaseDelete(filePath) {
+    const { data, error } = await supabase
+        .storage
+        .from(process.env.SUPABASE_BUCKET)
+        .remove([filePath])
+
+    if (error) {
+        console.error("Error deleting file: ", error);
+        throw error;
+    }
+
+    console.log(data);
+
+    return data;
+}
