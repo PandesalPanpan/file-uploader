@@ -23,7 +23,7 @@ export const signUpPost = async (req, res) => {
         return res.status(400).render("sign-up");
     }
 
-    res.render("index");
+    res.redirect("/login");
 
 }
 
