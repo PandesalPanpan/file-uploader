@@ -1,6 +1,6 @@
 import { body, validationResult } from "express-validator";
 import { supabaseDelete, supabaseUpload } from "../config/supabase.js";
-import upload from "../config/upload.js";
+import upload, { MAX_FILE_SIZE } from "../config/upload.js";
 import prisma from "../db/prisma.js"
 
 const validateFolder = [
@@ -156,27 +156,41 @@ export const uploadFileInDirectoryGet = (req, res) => {
 }
 
 export const uploadFilePost = [
-    upload.single("file_upload"),
-    async (req, res) => {
-        const file = req.file;
-        const supabaseFile = await supabaseUpload(file, req.user.id);
-
-        await prisma.file.create({
-            data: {
-                name: file.originalname,
-                size: String(file.size),
-                fileURL: supabaseFile.path,
-                ownerId: req.user.id,
-                directoryId: !!req.body.directory_id ? Number(req.body.directory_id) : null,
+    (req, res, next) => upload.single("file_upload")(req, res, (err) => {
+        if (err) {
+            // Multer file size limit
+            if (err.code === "LIMIT_FILE_SIZE") {
+                const mb = Math.round(MAX_FILE_SIZE / 1024 / 1024);
+                return res.status(400).render("upload-form", { errors: [`File too large (max ${mb} MB)`] });
             }
-        })
-
-        if (!!req.body.directory_id) {
-            return res.redirect(`/folder/${req.body.directory_id}`);
+            return next(err);
         }
+        next();
+    }),
+    async (req, res, next) => {
+        try {
+            const file = req.file;
+            if (!file) return res.status(400).render("upload-form", { errors: ["No file uploaded"] });
 
+            const supabaseFile = await supabaseUpload(file, req.user.id);
 
-        res.redirect("/");
+            await prisma.file.create({
+                data: {
+                    name: file.originalname,
+                    size: String(file.size),
+                    fileURL: supabaseFile.path,
+                    ownerId: req.user.id,
+                    directoryId: !!req.body.directory_id ? Number(req.body.directory_id) : null,
+                }
+            })
+
+            if (!!req.body.directory_id) {
+                return res.redirect(`/folder/${req.body.directory_id}`);
+            }
+            res.redirect("/");
+        } catch (err) {
+            next(err);
+        }
     }
 ]
 
