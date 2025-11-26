@@ -9,6 +9,7 @@ fileRouter.use(isAuth);
 
 fileRouter.get("/", fileController.getRootContents);
 fileRouter.get("/folder/:directoryId", fileController.getDirectoryContents);
+fileRouter.get("/folder/:folderId/delete", fileController.deleteFolder);
 
 fileRouter.get("/create-folder/:directoryId", fileController.createFolderInDirectoryGet);
 fileRouter.get("/create-folder", fileController.createRootFolderGet); 
@@ -16,7 +17,6 @@ fileRouter.post("/create-folder", fileController.createFolderPost);
 
 fileRouter.get("/edit-folder/:folderId", fileController.editFolderGet);
 fileRouter.post("/edit-folder", fileController.editFolderPost);
-fileRouter.get("/folder/:folderId/delete", fileController.deleteFolder);
 
 fileRouter.get("/upload-files", fileController.uploadFileGet);
 fileRouter.post("/upload-files", fileController.uploadFilePost);

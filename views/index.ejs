@@ -55,9 +55,7 @@
                                 </div>
                                 <div class="actions">
                                     <a class="btn btn-ghost" href="/edit-folder/<%= folder.id %>">Edit</a>
-                                    <form method="post" action="/folder/<%= folder.id %>/delete" style="display:inline">
-                                        <button type="submit" class="btn btn-danger">Delete</button>
-                                    </form>
+                                    <a href="/folder/<%= folder.id %>/delete" class="btn btn-danger">Delete</a>
                                 </div>
                             </article>
                             <% }) %>
