@@ -1,3 +1,4 @@
+import { uploadFile } from "../config/supabase.js";
 import upload from "../config/upload.js";
 import prisma from "../db/prisma.js"
 
@@ -97,7 +98,7 @@ export const editFolderPost = async (req, res) => {
 export const deleteFolder = async (req, res) => {
     const { folderId } = req.params;
 
-    const [ found ] = await prisma.$transaction([
+    const [found] = await prisma.$transaction([
         prisma.folder.findUnique({
             where: { id: Number(folderId) },
             select: { parentDirectoryId: true }
@@ -129,11 +130,13 @@ export const uploadFilePost = [
     upload.single("file_upload"),
     async (req, res) => {
         const file = req.file;
+        const supabaseFile = await uploadFile(file, req.user.id);
+
         await prisma.file.create({
             data: {
                 name: file.originalname,
                 size: String(file.size),
-                fileURL: file.path,
+                fileURL: supabaseFile.path,
                 ownerId: req.user.id,
                 directoryId: !!req.body.directory_id ? Number(req.body.directory_id) : null,
             }
@@ -161,7 +164,6 @@ export const fileGet = async (req, res) => {
 export const fileDownload = async (req, res) => {
     const { fileId } = req.params;
 
-    const file = await prisma.file.findUnique({ where: { id: Number(fileId) }})
-
-    res.download(file.fileURL, file.name);
+    const file = await prisma.file.findUnique({ where: { id: Number(fileId) } })
+    res.redirect(`${process.env.SUPABASE_URL}/storage/v1/object/public/${process.env.SUPABASE_BUCKET}/${file.fileURL}`);
 }
