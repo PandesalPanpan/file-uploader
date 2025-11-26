@@ -16,6 +16,7 @@ fileRouter.post("/create-folder", fileController.createFolderPost);
 
 fileRouter.get("/edit-folder/:folderId", fileController.editFolderGet);
 fileRouter.post("/edit-folder", fileController.editFolderPost);
+fileRouter.get("/folder/:folderId/delete", fileController.deleteFolder);
 
 fileRouter.get("/upload-files", fileController.uploadFileGet);
 fileRouter.post("/upload-files", fileController.uploadFilePost);

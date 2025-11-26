@@ -101,7 +101,7 @@ export const editFolderGet = async (req, res) => {
 }
 
 export const editFolderPost = async (req, res) => {
-    const { folder_id, name} = req.body;
+    const { folder_id, name } = req.body;
 
     const folder = await prisma.folder.update({
         where: {
@@ -113,4 +113,25 @@ export const editFolderPost = async (req, res) => {
     })
 
     res.render("edit-folder", { folder })
+}
+
+export const deleteFolder = async (req, res) => {
+    const { folderId } = req.params;
+
+    const [ found ] = await prisma.$transaction([
+        prisma.folder.findUnique({
+            where: { id: Number(folderId) },
+            select: { parentDirectoryId: true }
+        }),
+        prisma.folder.delete({
+            where: { id: Number(folderId) }
+        })
+    ]);
+
+    const parentId = found?.parentDirectoryId ?? null;
+    if (parentId) {
+        return res.redirect(`/folder/${parentId}`);
+    }
+
+    res.redirect('/');
 }
