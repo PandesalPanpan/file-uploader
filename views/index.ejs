@@ -23,7 +23,10 @@
     <% if (locals.files) { %>
         <ul>
         <% files.map((file) => { %>
-            <li><%= file.name %></li>    
+            <li>
+                <span><%= file.name %> | <span>
+                <a href="/file/<%= file.id %>">Details</a>
+            </li>    
         <% }) %>
         </ul>
     <% } %>
