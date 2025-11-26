@@ -249,76 +249,102 @@ input::placeholder, textarea::placeholder { color: rgba(43,43,43,0.45); }
 
 /* Grid / cards */
 .grid {
-  display:grid;
-  grid-template-columns: 1fr;
+  display: grid;
+  grid-template-columns: 1fr; /* mobile: 1 column */
   gap: 0.9rem;
-  margin-top:1rem;
+  margin-top: 1rem;
+  width: 100%;
 }
+
+/* Card constraints to prevent indefinite growth */
 .card {
-  display:flex;
-  gap:0.9rem;
-  align-items:center;
-  padding:0.9rem;
+  display: flex;
+  flex-direction: column;      /* stack top row + actions row */
+  gap: 0.9rem;
+  align-items: stretch;
+  padding: 0.9rem;
   background: var(--panel);
-  border-radius:14px;
+  border-radius: 14px;
   border: 1px solid var(--card-border);
   box-shadow: 0 8px 20px rgba(16,24,20,0.04);
+
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
 }
+
+/* new top row grouping */
+.card-top {
+  display: flex;
+  gap: 0.9rem;
+  align-items: center;
+}
+
+/* fixed-size icon remains inside top row */
 .card .icon {
-  width:52px;
-  height:52px;
-  border-radius:12px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:1.15rem;
-  color:#fff;
-  background: linear-gradient(135deg,var(--accent),var(--accent-2));
-}
-.card .meta { flex:1; overflow:hidden; }
-.card .meta .title { font-weight:700; color:var(--text); white-space:nowrap; text-overflow:ellipsis; overflow:hidden; }
-.card .meta .subtitle { color:var(--muted); font-size:0.88rem; margin-top:0.25rem; }
-
-/* Actions */
-.actions { display:flex; gap:0.6rem; align-items:center; }
-.actions a, .actions button { font-size:0.9rem; padding:0.45rem 0.65rem; border-radius:8px; }
-
-/* File details */
-.file-details {
-  display:flex;
-  flex-direction:column;
-  gap:0.75rem;
-  padding:0.75rem;
-  background: var(--panel);
-  border-radius:12px;
-  border: 1px solid var(--card-border);
+  flex: 0 0 52px;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
 }
 
-/* Errors */
-.errors {
-  background: rgba(214,69,59,0.06);
-  border-left: 4px solid rgba(214,69,59,0.18);
-  color: var(--danger);
-  padding:0.6rem;
-  border-radius:8px;
-  margin:0.75rem 0 0 0;
+/* meta area should be shrinkable and truncate text */
+.card .meta {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
 }
 
-/* Focus styles for accessibility */
-:focus-visible {
-  outline: 3px solid var(--focus-ring);
-  outline-offset: 3px;
-  border-radius:6px;
+.card .meta .title {
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  width: 100%;
 }
 
-/* Responsive */
+.card .meta .subtitle {
+  color: var(--muted);
+  font-size: 0.88rem;
+  margin-top: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* actions moved to their own row */
+.card-actions {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  justify-content: flex-end;   /* align buttons to right */
+  flex-wrap: wrap;             /* allow buttons to wrap if space is tight */
+  margin-top: 0.25rem;
+}
+.card-actions a,
+.card-actions button,
+.card-actions form {
+  flex-shrink: 0;
+}
+
+/* keep .actions compatibility if used elsewhere */
+.actions { display:flex; gap:0.6rem; align-items:center; flex-shrink:0; }
+
+/* Responsive: 1 / 2 / 3 columns layout */
 @media (min-width: 640px) {
-  .container { padding:1.25rem; }
   .grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (min-width: 1024px) {
   .grid { grid-template-columns: repeat(3, 1fr); }
-  .header { gap:1rem; }
 }
 
 /* Utilities */
