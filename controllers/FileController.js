@@ -56,7 +56,7 @@ export const createFolderPost = async (req, res) => {
         data: {
             ownerId: ownerId,
             name: name,
-            parentDirectoryId: Number(parent_directory_id) ?? null
+            parentDirectoryId: !!parent_directory_id ? Number(parent_directory_id) : null
         }
     });
 
