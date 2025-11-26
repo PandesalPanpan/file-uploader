@@ -87,3 +87,30 @@ export const uploadFilePost = [
         res.redirect("/");
     }
 ]
+
+export const editFolderGet = async (req, res) => {
+    const { folderId } = req.params;
+
+    const folder = await prisma.folder.findFirst({
+        where: {
+            id: Number(folderId)
+        }
+    })
+
+    res.render("edit-folder", { folder })
+}
+
+export const editFolderPost = async (req, res) => {
+    const { folder_id, name} = req.body;
+
+    const folder = await prisma.folder.update({
+        where: {
+            id: Number(folder_id)
+        },
+        data: {
+            name: name
+        }
+    })
+
+    res.render("edit-folder", { folder })
+}
