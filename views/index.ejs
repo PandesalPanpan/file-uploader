@@ -14,7 +14,7 @@
             <li>
                 <a href="<%= locals.directoryId ? '/folder/' + folder.id : 'folder/' + folder.id %>"><%= folder.name %></a>
                 <span><a href="<%='/edit-folder/' + folder.id%>">Edit</a>
-                <a href="#">Delete</a></span>
+                <a href="/folder/<%=folder.id%>/delete">Delete</a>
             </li>    
         <% }) %>
         </ul>
