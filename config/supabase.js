@@ -10,17 +10,17 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 export async function supabaseUpload(file, userId) {
     if (!file) throw new Error('No file provided');
-    const filename = `${Date.now()}-${file.originalname}`;
+    const safeBase = sanitizeFilename(file.originalname);
+    const filename = `${Date.now()}-${safeBase}`;
     const objectPath = `${userId}/${filename}`;
     if (!objectPath) throw new Error('Invalid object path');
-
     const { data, error } = await supabase
         .storage
         .from(supabaseBucket)
-        .upload(objectPath, file.buffer, { contentType: file.mimetype });
+        .upload(objectPath, file.buffer, { contentType: file.mimetype, upsert: false });
 
     if (error) {
-        console.log('Supabase storage error:', error);
+        console.error('Supabase storage error:', error);
         throw error;
     }
     return data;
@@ -37,7 +37,17 @@ export async function supabaseDelete(filePath) {
         throw error;
     }
 
-    console.log(data);
-
     return data;
+}
+
+function sanitizeFilename(name) {
+  if (!name) return `${Date.now()}`;
+  // replace characters that commonly cause "Invalid key" errors
+  // allow letters, numbers, dot, dash, underscore, parentheses; convert spaces to _
+  const cleaned = name
+    .replace(/\s+/g, '_')
+    .replace(/[^a-zA-Z0-9.\-_\(\)]/g, '_')
+    // limit length so keys don't get overly long
+    .slice(0, 200);
+  return cleaned;
 }
