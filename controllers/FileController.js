@@ -1,6 +1,12 @@
+import { body, validationResult } from "express-validator";
 import { supabaseDelete, supabaseUpload } from "../config/supabase.js";
 import upload from "../config/upload.js";
 import prisma from "../db/prisma.js"
+
+const validateFolder = [
+    body("name").trim()
+        .isLength({ min: 1, max: 15 }).withMessage("Folder name must 1-15 characters only")
+]
 
 export const getRootContents = async (req, res) => {
     const [folders, files] = await prisma.$transaction([
@@ -48,25 +54,37 @@ export const createFolderInDirectoryGet = (req, res) => {
     res.render("create-folder", { directoryId: directoryId })
 }
 
-export const createFolderPost = async (req, res) => {
-    // Check if there's a parent directory
-    const ownerId = req.user.id;
-    const { name, parent_directory_id } = req.body;
+export const createFolderPost = [
+    validateFolder,
+    async (req, res) => {
+        const ownerId = req.user.id;
+        const { name, parent_directory_id } = req.body;
 
-    const folder = await prisma.folder.create({
-        data: {
-            ownerId: ownerId,
-            name: name,
-            parentDirectoryId: !!parent_directory_id ? Number(parent_directory_id) : null
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.locals.errors = errors.array();
+            return res.status(400).redirect(
+                !!parent_directory_id ? `/create-folder/${parent_directory_id}` :
+                    "/create-folder"
+            )
         }
-    });
 
-    if (folder) {
-        return res.redirect(`/folder/${folder.id}`);
+
+        const folder = await prisma.folder.create({
+            data: {
+                ownerId: ownerId,
+                name: name,
+                parentDirectoryId: !!parent_directory_id ? Number(parent_directory_id) : null
+            }
+        });
+
+        if (folder) {
+            return res.redirect(`/folder/${folder.id}`);
+        }
+
+        res.redirect('/');
     }
-
-    res.redirect('/');
-}
+]
 
 export const editFolderGet = async (req, res) => {
     const { folderId } = req.params;
@@ -81,21 +99,30 @@ export const editFolderGet = async (req, res) => {
     res.render("edit-folder", { folder })
 }
 
-export const editFolderPost = async (req, res) => {
-    const { folder_id, name } = req.body;
+export const editFolderPost = [
+    validateFolder,
+    async (req, res) => {
+        const { folder_id, name } = req.body;
 
-    const folder = await prisma.folder.update({
-        where: {
-            id: Number(folder_id),
-            ownerId: req.user.id
-        },
-        data: {
-            name: name
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.locals.errors = errors.array();
+            return res.status(400).redirect(`/folder/${folder_id}`)
         }
-    })
 
-    res.render("edit-folder", { folder })
-}
+        const folder = await prisma.folder.update({
+            where: {
+                id: Number(folder_id),
+                ownerId: req.user.id
+            },
+            data: {
+                name: name
+            }
+        })
+
+        res.render("edit-folder", { folder })
+    }
+]
 
 export const deleteFolder = async (req, res) => {
     const { folderId } = req.params;
