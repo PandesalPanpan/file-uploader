@@ -1,11 +1,13 @@
-<nav>
-    <% if (locals.user) { %>
-        <%= user %>
-    <% } %>
-    <a href="/">Home</a>
+<nav role="navigation" aria-label="Main">
+  <a href="/">Home</a>
+
+  <% if (locals.user) { %>
+    <a href="/create-folder<%= locals.directoryId ? '/' + locals.directoryId : '' %>">Create Folder</a>
+    <a href="/upload-files<%= locals.directoryId ? '/' + locals.directoryId : '' %>">Upload Files</a>
+
+    <a href="/logout">Logout</a>
+  <% } else { %>
     <a href="/sign-up">Register</a>
     <a href="/login">Login</a>
-    <a href="/logout">Logout</a>
-    <a href="/create-folder<%= locals.directoryId ? '/' + directoryId : '' %>">Create Folder</a>
-    <a href="/upload-files<%= locals.directoryId ? '/' + directoryId : '' %>">Upload Files</a>
+  <% } %>
 </nav>
