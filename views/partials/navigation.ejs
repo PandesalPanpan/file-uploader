@@ -7,5 +7,5 @@
     <a href="/login">Login</a>
     <a href="/logout">Logout</a>
     <a href="/create-folder<%= locals.directoryId ? '/' + directoryId : '' %>">Create Folder</a>
-    <a href="/upload-files">Upload Files</a>
+    <a href="/upload-files<%= locals.directoryId ? '/' + directoryId : '' %>">Upload Files</a>
 </nav>

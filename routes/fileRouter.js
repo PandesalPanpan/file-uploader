@@ -20,5 +20,6 @@ fileRouter.get("/folder/:folderId/delete", fileController.deleteFolder);
 
 fileRouter.get("/upload-files", fileController.uploadFileGet);
 fileRouter.post("/upload-files", fileController.uploadFilePost);
+fileRouter.get("/upload-files/:folderId", fileController.uploadFileInDirectoryGet);
 
 export default fileRouter;

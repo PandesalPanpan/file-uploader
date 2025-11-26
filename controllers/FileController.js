@@ -67,27 +67,6 @@ export const createFolderPost = async (req, res) => {
     res.redirect('/');
 }
 
-export const uploadFileGet = (req, res) => {
-    res.render("upload-form");
-}
-
-export const uploadFilePost = [
-    upload.single("file_upload"),
-    async (req, res) => {
-        const file = req.file;
-        await prisma.file.create({
-            data: {
-                name: file.originalname,
-                fileURL: file.path,
-                ownerId: req.user.id
-            }
-        })
-
-        // TODO: Make this render the same page but with a message success
-        res.redirect("/");
-    }
-]
-
 export const editFolderGet = async (req, res) => {
     const { folderId } = req.params;
 
@@ -135,3 +114,36 @@ export const deleteFolder = async (req, res) => {
 
     res.redirect('/');
 }
+
+export const uploadFileGet = (req, res) => {
+    res.render("upload-form");
+}
+
+export const uploadFileInDirectoryGet = (req, res) => {
+    const { folderId } = req.params;
+
+    res.render("upload-form", { folderId });
+}
+
+export const uploadFilePost = [
+    upload.single("file_upload"),
+    async (req, res) => {
+
+        const file = req.file;
+        await prisma.file.create({
+            data: {
+                name: file.originalname,
+                fileURL: file.path,
+                ownerId: req.user.id,
+                directoryId: !!req.body.directory_id ? Number(req.body.directory_id) : null
+            }
+        })
+
+        if (!!req.body.directory_id) {
+            return res.redirect(`/folder/${req.body.directory_id}`);
+        }
+
+
+        res.redirect("/");
+    }
+]
