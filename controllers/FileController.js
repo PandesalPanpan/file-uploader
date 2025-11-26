@@ -128,14 +128,14 @@ export const uploadFileInDirectoryGet = (req, res) => {
 export const uploadFilePost = [
     upload.single("file_upload"),
     async (req, res) => {
-
         const file = req.file;
         await prisma.file.create({
             data: {
                 name: file.originalname,
+                size: String(file.size),
                 fileURL: file.path,
                 ownerId: req.user.id,
-                directoryId: !!req.body.directory_id ? Number(req.body.directory_id) : null
+                directoryId: !!req.body.directory_id ? Number(req.body.directory_id) : null,
             }
         })
 
