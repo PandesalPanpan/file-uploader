@@ -1,89 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>File Uploader</title>
-  <link rel="stylesheet" href="/style.css" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>File Uploader</title>
+    <link rel="stylesheet" href="/style.css" />
 </head>
+
 <body>
-  <div class="container">
-    <header class="header">
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <div>File Uploader</div>
-      </div>
+    <div class="container">
+        <header class="header">
+            <div class="brand">
+                <div class="logo" aria-hidden="true"></div>
+                <div>File Uploader</div>
+            </div>
 
-      <nav class="nav" role="navigation" aria-label="Main">
-        <%- include("partials/navigation.ejs") %>
-      </nav>
-    </header>
+            <nav class="nav" role="navigation" aria-label="Main">
+                <%- include("partials/navigation.ejs") %>
+            </nav>
+        </header>
 
-    <main>
-      <section class="breadcrumbs" aria-label="You are here">
-        <% if (locals.currentPath && locals.currentPath.length) { %>
-          <% locals.currentPath.forEach((p, i) => { %>
-            <a href="/folder/<%= p.id %>"><%= p.name %></a>
-            <% if (i < locals.currentPath.length - 1) { %>
-              <span aria-hidden="true">/</span>
-            <% } %>
-          <% }) %>
-        <% } else { %>
-          <span class="text-muted">Home</span>
-        <% } %>
-      </section>
+        <main>
+            <section class="breadcrumbs" aria-label="You are here">
+                <% if (locals.currentPath && locals.currentPath.length) { %>
+                    <a href="/"><span class="text-muted">Home</span></a>
+                    <% locals.currentPath.forEach((p, i)=> { %>
+                        <a href="/folder/<%= p.id %>">
+                            <%= p.name %>
+                        </a>
+                        <% if (i < locals.currentPath.length - 1) { %>
+                            <span aria-hidden="true">/</span>
+                            <% } %>
+                                <% }) %>
+                                    <% } else { %>
+                                        <a href="/"><span class="text-muted">Home</span></a>
+                                        <% } %>
+            </section>
 
-      <section>
-        <h2>Folders</h2>
+            <section>
+                <h2>Folders</h2>
 
-        <% if (folders && folders.length) { %>
-          <div class="grid" role="list">
-            <% folders.forEach(folder => { %>
-              <article class="card" role="listitem">
-                <div class="icon" aria-hidden="true">📁</div>
-                <div class="meta">
-                  <div class="title">
-                    <a href="/folder/<%= folder.id %>"><%= folder.name %></a>
-                  </div>
-                </div>
-                <div class="actions">
-                  <a class="btn btn-ghost" href="/edit-folder/<%= folder.id %>">Edit</a>
-                  <form method="post" action="/folder/<%= folder.id %>/delete" style="display:inline">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                  </form>
-                </div>
-              </article>
-            <% }) %>
-          </div>
-        <% } else { %>
-          <p class="text-muted">No folders yet.</p>
-        <% } %>
-      </section>
+                <% if (folders && folders.length) { %>
+                    <div class="grid" role="list">
+                        <% folders.forEach(folder=> { %>
+                            <article class="card" role="listitem">
+                                <div class="icon" aria-hidden="true">📁</div>
+                                <div class="meta">
+                                    <div class="title">
+                                        <a href="/folder/<%= folder.id %>">
+                                            <%= folder.name %>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="actions">
+                                    <a class="btn btn-ghost" href="/edit-folder/<%= folder.id %>">Edit</a>
+                                    <form method="post" action="/folder/<%= folder.id %>/delete" style="display:inline">
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </article>
+                            <% }) %>
+                    </div>
+                    <% } else { %>
+                        <p class="text-muted">No folders yet.</p>
+                        <% } %>
+            </section>
 
-      <section style="margin-top:1.25rem;">
-        <h2>Files</h2>
+            <section style="margin-top:1.25rem;">
+                <h2>Files</h2>
 
-        <% if (files && files.length) { %>
-          <div class="grid" role="list">
-            <% files.forEach(file => { %>
-              <article class="card" role="listitem">
-                <div class="icon" aria-hidden="true">📄</div>
-                <div class="meta">
-                  <div class="title"><%= file.name %></div>
-                  <div class="subtitle text-muted"><%= file.size %> bytes</div>
-                </div>
-                <div class="actions">
-                  <a class="btn btn-ghost" href="/files/<%= file.id %>/download">Download</a>
-                  <a class="btn" href="/file/<%= file.id %>">Details</a>
-                </div>
-              </article>
-            <% }) %>
-          </div>
-        <% } else { %>
-          <p class="text-muted">No files uploaded.</p>
-        <% } %>
-      </section>
-    </main>
-  </div>
+                <% if (files && files.length) { %>
+                    <div class="grid" role="list">
+                        <% files.forEach(file=> { %>
+                            <article class="card" role="listitem">
+                                <div class="icon" aria-hidden="true">📄</div>
+                                <div class="meta">
+                                    <div class="title">
+                                        <%= file.name %>
+                                    </div>
+                                    <div class="subtitle text-muted">
+                                        <%= file.size %> bytes
+                                    </div>
+                                </div>
+                                <div class="actions">
+                                    <a class="btn btn-ghost" href="/files/<%= file.id %>/download">Download</a>
+                                    <a class="btn" href="/file/<%= file.id %>">Details</a>
+                                </div>
+                            </article>
+                            <% }) %>
+                    </div>
+                    <% } else { %>
+                        <p class="text-muted">No files uploaded.</p>
+                        <% } %>
+            </section>
+        </main>
+    </div>
 </body>
+
 </html>
