@@ -62,10 +62,12 @@ export const createFolderPost = [
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            res.locals.errors = errors.array();
-            return res.status(400).redirect(
-                !!parent_directory_id ? `/create-folder/${parent_directory_id}` :
-                    "/create-folder"
+            return res.status(400).render(
+                "create-folder", 
+                { 
+                    directoryId: !!parent_directory_id ? parent_directory_id : null,
+                    errors: errors.array()
+                }
             )
         }
 
@@ -106,7 +108,6 @@ export const editFolderPost = [
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            res.locals.errors = errors.array();
             return res.status(400).redirect(`/folder/${folder_id}`)
         }
 
@@ -161,7 +162,7 @@ export const uploadFilePost = [
             // Multer file size limit
             if (err.code === "LIMIT_FILE_SIZE") {
                 const mb = Math.round(MAX_FILE_SIZE / 1024 / 1024);
-                return res.status(400).render("upload-form", { errors: [`File too large (max ${mb} MB)`] });
+                return res.status(400).render("upload-form", { errors: [{msg: `File too large (max ${mb} MB)`}] });
             }
             return next(err);
         }
@@ -170,7 +171,7 @@ export const uploadFilePost = [
     async (req, res, next) => {
         try {
             const file = req.file;
-            if (!file) return res.status(400).render("upload-form", { errors: ["No file uploaded"] });
+            if (!file) return res.status(400).render("upload-form", { errors: [{ msg: "No file uploaded"}] });
 
             const supabaseFile = await supabaseUpload(file, req.user.id);
 
