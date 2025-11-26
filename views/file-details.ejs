@@ -1,8 +1,28 @@
-<%- include("partials/navigation.ejs") %>
-<ul>
-    <li><%= file.name %></li>
-    <li><%= file.size %></li>
-    <li><%= file.uploadedAt %> </li>
-    <a href="/file/<%=file.id%>/download">Download</a>
-    <a href="/file/<%= file.id %>/delete">Delete</a>
-</ul>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Details</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <%- include("partials/navigation.ejs") %>
+        <ul>
+            <li>
+                <%= file.name %>
+            </li>
+            <li>
+                <%= file.size %>
+            </li>
+            <li>
+                <%= file.uploadedAt %>
+            </li>
+            <a href="/file/<%=file.id%>/download">Download</a>
+            <a href="/file/<%= file.id %>/delete">Delete</a>
+        </ul>
+</body>
+
+</html>
