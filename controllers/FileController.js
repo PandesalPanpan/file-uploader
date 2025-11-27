@@ -51,10 +51,11 @@ export const createRootFolderGet = (req, res) => {
     res.render("create-folder");
 }
 
-export const createFolderInDirectoryGet = (req, res) => {
+export const createFolderInDirectoryGet = async (req, res) => {
     const { directoryId } = req.params;
+    const currentPath = await getCurrentPathCTE(directoryId, req.user.id);
 
-    res.render("create-folder", { directoryId: directoryId })
+    res.render("create-folder", { directoryId: directoryId , currentPath })
 }
 
 export const createFolderPost = [
@@ -153,10 +154,10 @@ export const uploadFileGet = (req, res) => {
     res.render("upload-form");
 }
 
-export const uploadFileInDirectoryGet = (req, res) => {
+export const uploadFileInDirectoryGet = async (req, res) => {
     const { folderId } = req.params;
-
-    res.render("upload-form", { folderId });
+    const currentPath = await getCurrentPathCTE(folderId, req.user.id);
+    res.render("upload-form", { folderId, currentPath });
 }
 
 export const uploadFilePost = [
