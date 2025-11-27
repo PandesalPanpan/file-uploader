@@ -9,17 +9,62 @@
 </head>
 
 <body>
-  <%- include("partials/navigation.ejs") %>
-    <form action="/upload-files" method="post" enctype="multipart/form-data">
-      <% if (locals.folderId) { %>
-        <input type="hidden" name="directory_id" value="<%=folderId%>">
-        <% }%>
-          <label for="file_upload">
-            <input type="file" name="file_upload" />
-          </label>
-          <button type="submit">Upload</button>
-    </form>
-    <%- include("partials/errors.ejs") %>
+  <div class="container">
+    <header class="header">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>File Uploader</div>
+      </div>
+
+      <nav class="nav" role="navigation" aria-label="Main">
+        <%- include("partials/navigation.ejs") %>
+      </nav>
+    </header>
+
+    <main>
+      <section class="breadcrumbs" aria-label="You are here">
+        <% if (locals.currentPath && locals.currentPath.length) { %>
+          <a href="/"><span class="text-muted">Home</span></a>
+          <% locals.currentPath.forEach((p, i) => { %>
+            <a href="/folder/<%= p.id %>"><%= p.name %></a>
+            <% if (i < locals.currentPath.length - 1) { %>
+              <span aria-hidden="true">/</span>
+            <% } %>
+          <% }) %>
+        <% } else { %>
+          <a href="/"><span class="text-muted">Home</span></a>
+        <% } %>
+      </section>
+
+      <section class="form-wrapper max-720">
+        <h2>Upload File</h2>
+
+        <div class="form" role="form" aria-labelledby="upload-heading">
+          <form action="/upload-files" method="post" enctype="multipart/form-data" novalidate>
+            <% if (locals.folderId) { %>
+              <input type="hidden" name="directory_id" value="<%=folderId%>">
+            <% } %>
+
+            <label for="file_upload">
+              <input id="file_upload" name="file_upload" type="file" required>
+            </label>
+
+            <div style="display:flex; gap:0.5rem; margin-top:0.75rem; justify-content:center;">
+              <button type="submit" class="btn btn-primary">Upload</button>
+
+              <% if (locals.folderId) { %>
+                <a class="btn btn-ghost" href="/folder/<%= folderId %>">Cancel</a>
+              <% } else { %>
+                <a class="btn btn-ghost" href="/">Cancel</a>
+              <% } %>
+            </div>
+          </form>
+        </div>
+
+        <%- include("partials/errors.ejs") %>
+      </section>
+    </main>
+  </div>
 </body>
 
 </html>
