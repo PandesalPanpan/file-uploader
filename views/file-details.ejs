@@ -37,10 +37,8 @@
         <p class="text-muted">Uploaded: <%= file.uploadedAt %></p>
 
         <div style="margin-top:0.75rem;">
-          <a class="btn btn-primary" href="/files/<%= file.id %>/download">Download</a>
-          <form method="post" action="/files/<%= file.id %>/delete" style="display:inline">
-            <button class="btn btn-danger" type="submit">Delete</button>
-          </form>
+          <a class="btn btn-primary" href="/file/<%= file.id %>/download">Download</a>
+          <a href="/file/<%= file.id %>/delete" class="btn btn-danger">Delete</a>
           <a class="btn btn-ghost" href="<%= file.directoryId ? '/folder/' + file.directoryId : '/' %>">Back</a>
         </div>
       </section>
