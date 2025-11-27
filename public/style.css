@@ -442,6 +442,42 @@ form[action="/upload-files"] .errors {
     margin: 0;
 }
 
+/* Errors panel styling (applies to partials/errors.ejs output) */
+.errors {
+  background: rgba(214,69,59,0.06);
+  border-left: 4px solid rgba(214,69,59,0.18);
+  color: var(--danger);
+  padding: 0.75rem 0.9rem;
+  border-radius: 8px;
+  margin: 0.75rem 0 0 0;
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+/* list inside the errors box */
+.errors ul {
+  margin: 0;
+  padding-left: 1.25rem; /* keep bullets aligned */
+}
+
+/* individual error items */
+.errors li {
+  margin: 0.35rem 0;
+  color: var(--danger);
+}
+
+/* make sure links or strong text inside errors remain readable */
+.errors a, .errors strong {
+  color: rgba(0,0,0,0.85);
+  font-weight: 700;
+}
+
+/* accessible outline for focusable content inside the errors box */
+.errors :focus {
+  outline: 3px solid rgba(214,69,59,0.12);
+  outline-offset: 3px;
+}
+
 /* Utilities */
 .text-muted { color: var(--muted); font-size:0.9rem; }
 .center { display:flex; align-items:center; justify-content:center; }

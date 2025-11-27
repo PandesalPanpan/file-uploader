@@ -1,7 +1,9 @@
-<% if (locals.errors) {%>
+<% if (locals.errors && locals.errors.length) { %>
+  <div class="errors" role="alert" aria-live="polite">
     <ul>
-        <% errors.map((error) => { %>
-            <li> <%= error.msg %></li>
-        <% }) %>
+      <% locals.errors.forEach(function(error) { %>
+        <li><%= error.msg %></li>
+      <% }) %>
     </ul>
+  </div>
 <% } %>
